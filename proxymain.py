@@ -2,19 +2,19 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
-from colour import Color
+from colorama import init, Fore, Style
+init(autoreset=True)
 
 class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    RESET = '\033[0m'
+    RED = Fore.RED
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    BLUE = Fore.BLUE
+    MAGENTA = Fore.MAGENTA
+    CYAN = Fore.CYAN
+    RESET = Style.RESET_ALL
 
-
-ascii_art = """
+ascii_art = f"""
 
    ▄█    █▄       ▄████████ ▀████    ▐████▀ ▀████    ▐████▀ ▀████    ▐████▀ 
   ███    ███     ███    ███   ███▌   ████▀    ███▌   ████▀    ███▌   ████▀  
@@ -31,24 +31,20 @@ ascii_art = """
 
 """
 
-print(Colors.CYAN + ascii_art + Colors.RESET)
+print(Colors.CYAN + ascii_art)
 
-valid_proxy_file = "./valid_proxy.txt" 
+valid_proxy_file = "./valid_proxy.txt"
 URL = "https://www.us-proxy.org/"
 
-# def open_file():
-
 def collect_proxies(url):
-    print(Colors.YELLOW + "[*] Fetching proxy list..." + Colors.RESET)
+    print(Colors.YELLOW + "[*] Fetching proxy list...")
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-
 
     table = soup.find('table', {'class': 'table table-striped table-bordered'})
     proxies = []
 
-
-    for row in table.find_all('tr')[1:]: 
+    for row in table.find_all('tr')[1:]:
         cols = row.find_all('td')
         ip = cols[0].text
         port = cols[1].text
@@ -56,43 +52,39 @@ def collect_proxies(url):
     
     return proxies
 
-
 def test_proxy(proxy):
-    url = "http://www.google.com" 
+    url = "http://www.google.com"
     proxies = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
 
     try:
         response = requests.get(url, proxies=proxies, timeout=3)
         if response.status_code == 200:
-            print(Colors.GREEN + f"[+] Valid proxy: {proxy}" + Colors.RESET)
+            print(Colors.GREEN + f"[+] Valid proxy: {proxy}")
             with open(valid_proxy_file, 'a') as file:
                 file.write(proxy + '\n')
             return True
         else:
-            print(Colors.RED + f"[-] Invalid proxy: {proxy}" + Colors.RESET)
+            print(Colors.RED + f"[-] Invalid proxy: {proxy}")
             return False
     except requests.RequestException:
-        print(Colors.RED + f"[-] Invalid proxy: {proxy}" + Colors.RESET)
+        print(Colors.RED + f"[-] Invalid proxy: {proxy}")
         return False
-
 
 def main():
     proxies = collect_proxies(URL)
 
-    print(Colors.CYAN + "\n[*] Testing proxies..." + Colors.RESET)
+    print(Colors.CYAN + "\n[*] Testing proxies...")
     valid_proxies = []
 
     for proxy in proxies:
-        time.sleep(random.randint(1, 2)) 
+        time.sleep(random.randint(1, 2))
         if test_proxy(proxy):
             valid_proxies.append(proxy)
 
-
-    print(Colors.MAGENTA + "\n[*] Valid proxies found:" + Colors.RESET)
+    print(Colors.MAGENTA + "\n[*] Valid proxies found:")
     for proxy in valid_proxies:
-        print(Colors.BLUE + f"  {proxy}" + Colors.RESET)
+        print(Colors.BLUE + f"  {proxy}")
 
 if __name__ == "__main__":
     main()
-
 
