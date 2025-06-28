@@ -24,10 +24,9 @@ ascii_art = f"""
   ███    ███     ███    ███   ▐███  ▀███      ▐███  ▀███      ▐███  ▀███    
   ███    ███     ███    ███  ▄███     ███▄   ▄███     ███▄   ▄███     ███▄  
   ███    █▀      ███    █▀  ████       ███▄ ████       ███▄ ████       ███▄ 
-             
-             我爱你，雷娜塔
+              
 - version: 1.0
-- github: https://github.com/slyhax
+- github: https://github.com/emptyhax
 
 """
 
